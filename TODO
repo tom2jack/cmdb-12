@@ -1,10 +1,100 @@
-07/02/202
-Start to use the errors.c in lib/ directory. cmdb-0.3 branch has put the
-base_sql.h header file into include/
+03/11/2020
+When adding package to varient, we need to check if the package already
+exists in that varient and not add it again. IDEMPOTENT
+	** Done. Commit ID: 51dcd4e **
 
-27/02/2019
-Need to add a generic logging function, that can handle both console
-output and also logging to syslog.
+17/07/2020
+When displaying build OS, it would be useful to know what servers are
+built with that OS.
+Also display does not honour -o <os_version> nor -t <architecture>
+
+11/07/2020
+Should be able to read config values from environment variables. Also
+have defaults either in config file, environment or database
+
+02/07/2020
+Fix cbcvarient where displaying varient that does not exist blows up.
+
+28/06/2020
+The cmdb_add_*_id_to_list functions are inconsistent. Some fail if they do
+not find what they are searching for. Should maybe have a wrapper function
+for them if we want to be _sure_ there the server is added. Could probably
+do this when consolidating these functions doing note 24/06/2020.
+
+27/06/2020
+It would be useful to have extra functions for the list(clone being an example)
+
+24/06/2020
+Consolidate the cmdb_add_*_id_to_list into 2 functions:
+	1 for char *
+	1 for char **
+Have to be careful of the char ** one; Need to tell length of list. Maybe end
+with NULL pointer at the end of list?
+
+20/06/2020
+Strange bug when building reverse zones with newly set preferred A record.
+It does not add the record in on the first time the zone is built, only on
+the 2nd time it is built.
+
+06/06/2020
+Should probably move all actions to the CMDB_ definitions. These are in
+ailsacmdb.h and will remove another dependency on cmdb.h
+
+06/05/2020
+In the sqlite setup functions (ailsa_setup_rw_sqlite and ailsa_setup_ro_sqlite)
+need to stop exiting in these functions. They should pass their error back up
+the function stack
+
+05/05/2020
+cbcscript is tightly tied into the build_type table; also the system_scripts_args
+table has too much information in it. It would be better to be like system
+packages where there is an args and a conf table.
+
+03/05/2020
+Need to fix the error returns, as report_error does not free memory in use
+before exiting. The error report function should only report an error.
+The error code should be able to 'bubble up' from whatever function had an
+error, and get back to main, so we can free memory there
+
+03/05/2020
+Adding a system package in cbcsysp should not automatically configure the
+package. Indeed, it should check if the package is in the varient. This will
+obviously fail for packaes that are part of a base install, and so those
+packages should be added to the base varient.
+
+20/04/2020
+When adding a locale, need to check if that locale already exists
+
+19/04/2020
+When adding packages, I need to check if the package already exists for
+that particular varient and OS combination.
+
+10/04/2020
+When grabbing kernel and initrd boot files, a summary of download speed
+should be printed.
+	** This is hipster bullshit. Fuck off! **
+
+04/04/2020
+Programs moved to new AILLIST database model:
+	cmdb		**Done**
+	dnsa		**Done**
+	cbc		**Done**
+	cbcvarient	**Done**
+	cbcdomain	**Done**
+	cbcos		**Done**
+	cbcsysp		**Done**
+	cbcscript	**Done**
+	cbcpart		**Done**
+	cbclocale	**Done**
+
+31/10/2016
+Add support for a YAML data file, so we do not have the unwieldy command
+line options. Once this is up and working, this can be the default data
+definition language for the daemon too.
+
+Reworking the SQL code:
+  - allow inserts of multiple entries				**DONE**
+  - condense cmdb dnsa and cbc sql into 1 set of functions	**DONE**
 
 09/11/2018
 Deleting SRV records is tricky; it seems to delete all SRV records
